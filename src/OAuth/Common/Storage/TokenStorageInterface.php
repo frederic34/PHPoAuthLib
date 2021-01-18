@@ -54,7 +54,7 @@ interface TokenStorageInterface
     public function clearAllTokens();
 
     /**
-     * Store the authorization state related to a given service
+     * Store the authorization state related to a given service.
      *
      * @param string $service   service name
      * @param string $state     state of authorization
@@ -64,7 +64,7 @@ interface TokenStorageInterface
     public function storeAuthorizationState($service, $state);
 
     /**
-     * Check if an authorization state for a given service exists
+     * Check if an authorization state for a given service exists.
      *
      * @param string $service   service name
      *
@@ -73,7 +73,7 @@ interface TokenStorageInterface
     public function hasAuthorizationState($service);
 
     /**
-     * Retrieve the authorization state for a given service
+     * Retrieve the authorization state for a given service.
      *
      * @param string $service   service name
      *

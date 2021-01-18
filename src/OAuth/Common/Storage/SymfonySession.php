@@ -2,15 +2,17 @@
 
 namespace OAuth\Common\Storage;
 
-use OAuth\Common\Token\TokenInterface;
-use OAuth\Common\Storage\Exception\TokenNotFoundException;
 use OAuth\Common\Storage\Exception\AuthorizationStateNotFoundException;
+use OAuth\Common\Storage\Exception\TokenNotFoundException;
+use OAuth\Common\Token\TokenInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class SymfonySession implements TokenStorageInterface
 {
     private $session;
+
     private $sessionVariableName;
+
     private $stateVariableName;
 
     /**
@@ -55,7 +57,7 @@ class SymfonySession implements TokenStorageInterface
         $tokens = $this->session->get($this->sessionVariableName);
 
         if (!is_array($tokens)) {
-            $tokens = array();
+            $tokens = [];
         }
 
         $tokens[$service] = $token;
@@ -135,7 +137,7 @@ class SymfonySession implements TokenStorageInterface
         $states = $this->session->get($this->stateVariableName);
 
         if (!is_array($states)) {
-            $states = array();
+            $states = [];
         }
 
         $states[$service] = $state;

@@ -76,7 +76,7 @@ class Memory implements TokenStorageInterface
      */
     public function clearAllTokens()
     {
-        $this->tokens = array();
+        $this->tokens = [];
 
         // allow chaining
         return $this;
@@ -131,7 +131,7 @@ class Memory implements TokenStorageInterface
      */
     public function clearAllAuthorizationStates()
     {
-        $this->states = array();
+        $this->states = [];
 
         // allow chaining
         return $this;

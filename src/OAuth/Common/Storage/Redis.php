@@ -2,9 +2,9 @@
 
 namespace OAuth\Common\Storage;
 
-use OAuth\Common\Token\TokenInterface;
-use OAuth\Common\Storage\Exception\TokenNotFoundException;
 use OAuth\Common\Storage\Exception\AuthorizationStateNotFoundException;
+use OAuth\Common\Storage\Exception\TokenNotFoundException;
+use OAuth\Common\Token\TokenInterface;
 use Predis\Client as Predis;
 
 /**
@@ -37,7 +37,7 @@ class Redis implements TokenStorageInterface
     /**
      * @param Predis $redis An instantiated and connected redis client
      * @param string $key The key to store the token under in redis
-     * @param string $stateKey the key to store the state under in redis.
+     * @param string $stateKey the key to store the state under in redis
      */
     public function __construct(Predis $redis, $key, $stateKey)
     {
