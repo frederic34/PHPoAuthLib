@@ -333,7 +333,7 @@ class Uri implements UriInterface
      * @param string $var
      * @param string $val
      */
-    public function addToQuery($var, $val)
+    public function addToQuery($var, $val): void
     {
         if (strlen($this->query) > 0) {
             $this->query .= '&';
@@ -357,7 +357,6 @@ class Uri implements UriInterface
         $this->scheme = $scheme;
     }
 
-
     /**
      * @param string $userInfo
      */
@@ -366,7 +365,6 @@ class Uri implements UriInterface
         $this->userInfo = $userInfo ? $this->protectUserInfo($userInfo) : '';
         $this->rawUserInfo = $userInfo;
     }
-
 
     /**
      * @param int $port
