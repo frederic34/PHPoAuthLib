@@ -2,6 +2,7 @@
 
 namespace OAuth\OAuth1\Service;
 
+use DateTime;
 use OAuth\Common\Consumer\CredentialsInterface;
 use OAuth\Common\Storage\TokenStorageInterface;
 use OAuth\Common\Http\Exception\TokenResponseException;
@@ -20,7 +21,7 @@ abstract class AbstractService extends BaseAbstractService implements ServiceInt
     /** @var SignatureInterface */
     protected $signature;
 
-    /** @var UriInterface|null */
+    /** @var null|UriInterface */
     protected $baseApiUri;
 
     /**
@@ -31,7 +32,7 @@ abstract class AbstractService extends BaseAbstractService implements ServiceInt
         ClientInterface $httpClient,
         TokenStorageInterface $storage,
         SignatureInterface $signature,
-        UriInterface $baseApiUri = null
+        ?UriInterface $baseApiUri = null
     ) {
         parent::__construct($credentials, $httpClient, $storage);
 
@@ -46,10 +47,10 @@ abstract class AbstractService extends BaseAbstractService implements ServiceInt
      */
     public function requestRequestToken()
     {
-        $authorizationHeader = array('Authorization' => $this->buildAuthorizationHeaderForTokenRequest());
+        $authorizationHeader = ['Authorization' => $this->buildAuthorizationHeaderForTokenRequest()];
         $headers = array_merge($authorizationHeader, $this->getExtraOAuthHeaders());
 
-        $responseBody = $this->httpClient->retrieveResponse($this->getRequestTokenEndpoint(), array(), $headers);
+        $responseBody = $this->httpClient->retrieveResponse($this->getRequestTokenEndpoint(), [], $headers);
 
         $token = $this->parseRequestTokenResponse($responseBody);
         $this->storage->storeAccessToken($this->service(), $token);
@@ -60,7 +61,7 @@ abstract class AbstractService extends BaseAbstractService implements ServiceInt
     /**
      * {@inheritdoc}
      */
-    public function getAuthorizationUri(array $additionalParameters = array())
+    public function getAuthorizationUri(array $additionalParameters = [])
     {
         // Build the url
         $url = clone $this->getAuthorizationEndpoint();
@@ -130,12 +131,12 @@ abstract class AbstractService extends BaseAbstractService implements ServiceInt
     {
         $uri = $this->determineRequestUriFromPath($path, $this->baseApiUri);
 
-        /** @var $token StdOAuth1Token */
+        /** @var StdOAuth1Token $token */
         $token = $this->storage->retrieveAccessToken($this->service());
         $extraHeaders = array_merge($this->getExtraApiHeaders(), $extraHeaders);
-        $authorizationHeader = array(
+        $authorizationHeader = [
             'Authorization' => $this->buildAuthorizationHeaderForAPIRequest($method, $uri, $token, $body)
-        );
+        ];
         $headers = array_merge($authorizationHeader, $extraHeaders);
 
         return $this->httpClient->retrieveResponse($uri, $body, $headers, $method);
@@ -241,12 +242,12 @@ abstract class AbstractService extends BaseAbstractService implements ServiceInt
     {
         $dateTime = new \DateTime();
         $headerParameters = array(
-            'oauth_callback'         => $this->credentials->getCallbackUrl(),
-            'oauth_consumer_key'     => $this->credentials->getConsumerId(),
-            'oauth_nonce'            => $this->generateNonce(),
+            'oauth_callback' => $this->credentials->getCallbackUrl(),
+            'oauth_consumer_key' => $this->credentials->getConsumerId(),
+            'oauth_nonce' => $this->generateNonce(),
             'oauth_signature_method' => $this->getSignatureMethod(),
-            'oauth_timestamp'        => $dateTime->format('U'),
-            'oauth_version'          => $this->getVersion(),
+            'oauth_timestamp' => $dateTime->format('U'),
+            'oauth_version' => $this->getVersion(),
         );
 
         return $headerParameters;

@@ -82,7 +82,7 @@ interface TokenStorageInterface
     public function retrieveAuthorizationState($service);
 
     /**
-     * Clear the authorization state of a given service
+     * Clear the authorization state of a given service.
      *
      * @param string $service   service name
      *

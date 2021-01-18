@@ -100,7 +100,7 @@ abstract class AbstractToken implements TokenInterface
     /**
      * @param int $lifetime
      */
-    public function setLifetime($lifetime)
+    public function setLifetime($lifetime): void
     {
         if (0 === $lifetime || static::EOL_NEVER_EXPIRES === $lifetime) {
             $this->endOfLife = static::EOL_NEVER_EXPIRES;
@@ -114,7 +114,7 @@ abstract class AbstractToken implements TokenInterface
     /**
      * @param string $refreshToken
      */
-    public function setRefreshToken($refreshToken)
+    public function setRefreshToken($refreshToken): void
     {
         $this->refreshToken = $refreshToken;
     }
