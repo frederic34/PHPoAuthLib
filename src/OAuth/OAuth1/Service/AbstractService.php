@@ -254,7 +254,7 @@ abstract class AbstractService extends BaseAbstractService implements ServiceInt
     }
 
     /**
-     * Pseudo random string generator used to build a unique string to sign each request
+     * Pseudo random string generator used to build a unique string to sign each request.
      *
      * @param int $length
      *
@@ -265,9 +265,9 @@ abstract class AbstractService extends BaseAbstractService implements ServiceInt
         $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
 
         $nonce = '';
-        $maxRand = strlen($characters)-1;
-        for ($i = 0; $i < $length; $i++) {
-            $nonce.= $characters[rand(0, $maxRand)];
+        $maxRand = strlen($characters) - 1;
+        for ($i = 0; $i < $length; ++$i) {
+            $nonce .= $characters[mt_rand(0, $maxRand)];
         }
 
         return $nonce;
@@ -282,7 +282,7 @@ abstract class AbstractService extends BaseAbstractService implements ServiceInt
     }
 
     /**
-     * This returns the version used in the authorization header of the requests
+     * This returns the version used in the authorization header of the requests.
      *
      * @return string
      */
