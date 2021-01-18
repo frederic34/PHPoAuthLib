@@ -37,7 +37,7 @@ class StreamClient extends AbstractClient
         $this->normalizeHeaders($extraHeaders);
 
         if ($method === 'GET' && !empty($requestBody)) {
-            throw new \InvalidArgumentException('No body expected for "GET" request.');
+            throw new InvalidArgumentException('No body expected for "GET" request.');
         }
 
         if (!isset($extraHeaders['Content-Type']) && $method === 'POST' && is_array($requestBody)) {
@@ -71,6 +71,7 @@ class StreamClient extends AbstractClient
                     ((isset($http_response_header[0])) ? $http_response_header[0] : 'No response')
                 );
             }
+
             throw new TokenResponseException($lastError['message']);
         }
 
@@ -88,7 +89,7 @@ class StreamClient extends AbstractClient
                     'protocol_version' => '1.1',
                     'user_agent' => $this->userAgent,
                     'max_redirects' => $this->maxRedirects,
-                    'timeout' => $this->timeout
+                    'timeout' => $this->timeout,
                 ],
             ]
         );
