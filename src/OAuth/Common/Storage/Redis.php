@@ -37,15 +37,15 @@ class Redis implements TokenStorageInterface
     /**
      * @param Predis $redis An instantiated and connected redis client
      * @param string $key The key to store the token under in redis
-     * @param string $stateKey The key to store the state under in redis.
+     * @param string $stateKey the key to store the state under in redis.
      */
     public function __construct(Predis $redis, $key, $stateKey)
     {
         $this->redis = $redis;
         $this->key = $key;
         $this->stateKey = $stateKey;
-        $this->cachedTokens = array();
-        $this->cachedStates = array();
+        $this->cachedTokens = [];
+        $this->cachedStates = [];
     }
 
     /**
@@ -111,7 +111,7 @@ class Redis implements TokenStorageInterface
     public function clearAllTokens()
     {
         // memory
-        $this->cachedTokens = array();
+        $this->cachedTokens = [];
 
         // redis
         $keys = $this->redis->hkeys($this->key);
@@ -119,7 +119,7 @@ class Redis implements TokenStorageInterface
 
         // pipeline for performance
         $this->redis->pipeline(
-            function ($pipe) use ($keys, $me) {
+            function ($pipe) use ($keys, $me): void {
                 foreach ($keys as $k) {
                     $pipe->hdel($me->getKey(), $k);
                 }
@@ -193,7 +193,7 @@ class Redis implements TokenStorageInterface
     public function clearAllAuthorizationStates()
     {
         // memory
-        $this->cachedStates = array();
+        $this->cachedStates = [];
 
         // redis
         $keys = $this->redis->hkeys($this->stateKey);
@@ -201,7 +201,7 @@ class Redis implements TokenStorageInterface
 
         // pipeline for performance
         $this->redis->pipeline(
-            function ($pipe) use ($keys, $me) {
+            function ($pipe) use ($keys, $me): void {
                 foreach ($keys as $k) {
                     $pipe->hdel($me->getKey(), $k);
                 }

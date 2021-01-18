@@ -2,9 +2,9 @@
 
 namespace OAuth\Common\Storage;
 
-use OAuth\Common\Token\TokenInterface;
-use OAuth\Common\Storage\Exception\TokenNotFoundException;
 use OAuth\Common\Storage\Exception\AuthorizationStateNotFoundException;
+use OAuth\Common\Storage\Exception\TokenNotFoundException;
+use OAuth\Common\Token\TokenInterface;
 
 /**
  * Stores a token in a PHP session.
