@@ -71,6 +71,8 @@ class Uri implements UriInterface
 
     /**
      * @param string $uri
+     *
+     * @throws \InvalidArgumentException
      */
     protected function parseUri($uri): void
     {

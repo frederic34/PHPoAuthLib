@@ -6,7 +6,9 @@ use OAuth\Common\Storage\Exception\AuthorizationStateNotFoundException;
 use OAuth\Common\Storage\Exception\TokenNotFoundException;
 use OAuth\Common\Token\TokenInterface;
 
-// Stores a token in-memory only (destroyed at end of script execution).
+/*
+ * Stores a token in-memory only (destroyed at end of script execution).
+ */
 class Memory implements TokenStorageInterface
 {
     /**

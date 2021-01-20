@@ -28,6 +28,8 @@ class CurlClient extends AbstractClient
 
     /**
      * Additional `curl_setopt` parameters.
+     *
+     * @param array $parameters
      */
     public function setCurlParameters(array $parameters): void
     {
@@ -50,10 +52,15 @@ class CurlClient extends AbstractClient
      * Any implementing HTTP providers should send a request to the provided endpoint with the parameters.
      * They should return, in string form, the response body and throw an exception on error.
      *
+     * @param UriInterface $endpoint
      * @param mixed        $requestBody
+     * @param array        $extraHeaders
      * @param string       $method
      *
      * @return string
+     *
+     * @throws TokenResponseException
+     * @throws \InvalidArgumentException
      */
     public function retrieveResponse(
         UriInterface $endpoint,
@@ -81,13 +88,13 @@ class CurlClient extends AbstractClient
 
         curl_setopt($ch, CURLOPT_URL, $endpoint->getAbsoluteUri());
 
-        if ($method === 'POST' || $method === 'PUT') {
+        if ($method === 'POST' || $method === 'PUT' || $method === 'PATCH') {
             if ($requestBody && is_array($requestBody)) {
                 $requestBody = http_build_query($requestBody, '', '&');
             }
 
-            if ($method === 'PUT') {
-                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+            if ($method === 'PUT' || $method === 'PATCH') {
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
             } else {
                 curl_setopt($ch, CURLOPT_POST, true);
             }
@@ -110,6 +117,10 @@ class CurlClient extends AbstractClient
 
         foreach ($this->parameters as $key => $value) {
             curl_setopt($ch, $key, $value);
+        }
+
+        if ($this->forceSSL3) {
+            curl_setopt($ch, CURLOPT_SSLVERSION, 3);
         }
 
         $response = curl_exec($ch);

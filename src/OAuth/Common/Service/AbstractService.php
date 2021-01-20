@@ -23,6 +23,11 @@ abstract class AbstractService implements ServiceInterface
     /** @var TokenStorageInterface */
     protected $storage;
 
+    /**
+     * @param CredentialsInterface  $credentials
+     * @param ClientInterface       $httpClient
+     * @param TokenStorageInterface $storage
+     */
     public function __construct(
         CredentialsInterface $credentials,
         ClientInterface $httpClient,
@@ -38,6 +43,8 @@ abstract class AbstractService implements ServiceInterface
      * @param UriInterface        $baseApiUri
      *
      * @return UriInterface
+     *
+     * @throws Exception
      */
     protected function determineRequestUriFromPath($path, ?UriInterface $baseApiUri = null)
     {

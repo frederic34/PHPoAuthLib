@@ -27,6 +27,8 @@ interface ServiceInterface
     /**
      * Returns the url to redirect to for authorization purposes.
      *
+     * @param array $additionalParameters
+     *
      * @return UriInterface
      */
     public function getAuthorizationUri(array $additionalParameters = []);

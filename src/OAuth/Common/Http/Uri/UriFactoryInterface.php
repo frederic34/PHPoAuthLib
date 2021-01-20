@@ -10,6 +10,8 @@ interface UriFactoryInterface
     /**
      * Factory method to build a URI from a super-global $_SERVER array.
      *
+     * @param array $_server
+     *
      * @return UriInterface
      */
     public function createFromSuperGlobalArray(array $_server);

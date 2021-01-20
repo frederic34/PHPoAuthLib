@@ -7,7 +7,9 @@ use OAuth\Common\Storage\Exception\TokenNotFoundException;
 use OAuth\Common\Token\TokenInterface;
 use Predis\Client as Predis;
 
-// Stores a token in a Redis server. Requires the Predis library available at https://github.com/nrk/predis
+/**
+ * Stores a token in a Redis server. Requires the Predis library available at https://github.com/nrk/predis
+ */
 class Redis implements TokenStorageInterface
 {
     /**

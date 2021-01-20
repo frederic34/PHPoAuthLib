@@ -9,15 +9,30 @@ use OAuth\Common\Consumer\CredentialsInterface;
 use OAuth\Common\Http\Client\ClientInterface;
 use OAuth\Common\Storage\TokenStorageInterface;
 use OAuth\Common\Http\Uri\UriInterface;
+use OAuth\OAuth2\Service\Exception\MissingRefreshTokenException;
+use OAuth\Common\Token\TokenInterface;
 
 /**
- * Dropbox service.
+ * Docusign service.
  *
- * @author Flávio Heleno <flaviohbatista@gmail.com>
- * @link https://www.dropbox.com/developers/core/docs
+ * @author Naveen Gopala <naveen.gopala@docusign.com>
+ * @link https://images-na.ssl-images-docusign.com/images/G/01/lwa/dev/docs/website-developer-guide._TTH_.pdf
  */
-class Dropbox extends AbstractService
+class Docusign extends AbstractService
 {
+    /**
+     * Defined scopes
+     * @link https://images-na.ssl-images-docusign.com/images/G/01/lwa/dev/docs/website-developer-guide._TTH_.pdf
+     */
+    const SCOPE_SIGNATURE = 'signature';
+
+    /**
+     * @param CredentialsInterface  $credentials    credentials
+     * @param ClientInterface       $httpClient     httpclient
+     * @param TokenStorageInterface $storage        storage
+     * @param array                 $scopes         scopes
+     * @param UriInterface          $baseApiUri     base api uri
+     */
     public function __construct(
         CredentialsInterface $credentials,
         ClientInterface $httpClient,
@@ -28,7 +43,9 @@ class Dropbox extends AbstractService
         parent::__construct($credentials, $httpClient, $storage, $scopes, $baseApiUri);
 
         if (null === $baseApiUri) {
-            $this->baseApiUri = new Uri('https://api.dropbox.com/1/');
+            // account-d.docusign.com for the developer sandbox
+            // account.docusign.com for the production platform.
+            $this->baseApiUri = new Uri('https://account-d.docusign.com');
         }
     }
 
@@ -62,7 +79,7 @@ class Dropbox extends AbstractService
      */
     public function getAuthorizationEndpoint()
     {
-        return new Uri('https://www.dropbox.com/1/oauth2/authorize');
+        return new Uri('https://account-d.docusign.com/oauth/auth');
     }
 
     /**
@@ -70,7 +87,7 @@ class Dropbox extends AbstractService
      */
     public function getAccessTokenEndpoint()
     {
-        return new Uri('https://api.dropbox.com/1/oauth2/token');
+        return new Uri('https://account-d.docusign.com/oauth/token');
     }
 
     /**
@@ -78,7 +95,7 @@ class Dropbox extends AbstractService
      */
     protected function getAuthorizationMethod()
     {
-        return static::AUTHORIZATION_METHOD_QUERY_STRING;
+        return static::AUTHORIZATION_METHOD_HEADER_BEARER;
     }
 
     /**
@@ -90,12 +107,15 @@ class Dropbox extends AbstractService
 
         if (null === $data || !is_array($data)) {
             throw new TokenResponseException('Unable to parse response.');
+        } elseif (isset($data['error_description'])) {
+            throw new TokenResponseException('Error in retrieving token: "' . $data['error_description'] . '"');
         } elseif (isset($data['error'])) {
             throw new TokenResponseException('Error in retrieving token: "' . $data['error'] . '"');
         }
 
         $token = new StdOAuth2Token();
         $token->setAccessToken($data['access_token']);
+        $token->setLifeTime($data['expires_in']);
 
         if (isset($data['refresh_token'])) {
             $token->setRefreshToken($data['refresh_token']);
@@ -103,9 +123,43 @@ class Dropbox extends AbstractService
         }
 
         unset($data['access_token']);
+        unset($data['expires_in']);
 
         $token->setExtraParams($data);
 
         return $token;
     }
+
+    /**
+     * Docusign use a different endpoint for refresh a token
+     *
+     * {@inheritdoc}
+     */
+    public function refreshAccessToken(TokenInterface $token)
+    {
+        $refreshToken = $token->getRefreshToken();
+
+        if (empty($refreshToken)) {
+            throw new MissingRefreshTokenException();
+        }
+
+        $parameters = array(
+            'grant_type'    => 'refresh_token',
+            'type'          => 'web_server',
+            'client_id'     => $this->credentials->getConsumerId(),
+            'client_secret' => $this->credentials->getConsumerSecret(),
+            'refresh_token' => $refreshToken,
+        );
+
+        $responseBody = $this->httpClient->retrieveResponse(
+            new Uri($this->baseApiUri.'/oauth/token'),
+            $parameters,
+            $this->getExtraOAuthHeaders()
+        );
+        $token = $this->parseAccessTokenResponse($responseBody);
+        $this->storage->storeAccessToken($this->service(), $token);
+
+        return $token;
+    }
+
 }

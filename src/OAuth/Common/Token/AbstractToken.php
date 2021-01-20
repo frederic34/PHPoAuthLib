@@ -65,6 +65,9 @@ abstract class AbstractToken implements TokenInterface
         return $this->endOfLife;
     }
 
+    /**
+     * @param array $extraParams
+     */
     public function setExtraParams(array $extraParams): void
     {
         $this->extraParams = $extraParams;

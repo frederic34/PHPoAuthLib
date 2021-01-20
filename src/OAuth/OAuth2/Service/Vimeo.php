@@ -4,27 +4,25 @@
  *
  * @author  Pedro Amorim <contact@pamorim.fr>
  * @license http://www.opensource.org/licenses/mit-license.html MIT License
- *
  * @see    https://developer.vimeo.com/
  * @see    https://developer.vimeo.com/api/authentication
  */
 
 namespace OAuth\OAuth2\Service;
 
-use OAuth\Common\Consumer\CredentialsInterface;
-use OAuth\Common\Http\Client\ClientInterface;
+use OAuth\OAuth2\Token\StdOAuth2Token;
 use OAuth\Common\Http\Exception\TokenResponseException;
 use OAuth\Common\Http\Uri\Uri;
-use OAuth\Common\Http\Uri\UriInterface;
+use OAuth\Common\Consumer\CredentialsInterface;
+use OAuth\Common\Http\Client\ClientInterface;
 use OAuth\Common\Storage\TokenStorageInterface;
-use OAuth\OAuth2\Token\StdOAuth2Token;
+use OAuth\Common\Http\Uri\UriInterface;
 
 /**
  * Vimeo service.
  *
  * @author  Pedro Amorim <contact@pamorim.fr>
  * @license http://www.opensource.org/licenses/mit-license.html MIT License
- *
  * @see    https://developer.vimeo.com/
  * @see    https://developer.vimeo.com/api/authentication
  */
@@ -37,7 +35,6 @@ class Vimeo extends AbstractService
 
     /**
      * Scopes.
-     *
      * @see  https://developer.vimeo.com/api/authentication#scope
      */
     // View public videos
